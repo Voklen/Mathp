@@ -13,7 +13,7 @@ fn get_arguments() -> Vec<String> {
 	let arguments_as_strings: Vec<String> = std::env::args().skip(1).collect();
 
 	if arguments_as_strings.is_empty() {
-		throw("missing operand");
+		throw_void("missing operand");
 	}
 
 	for arg in &arguments_as_strings {

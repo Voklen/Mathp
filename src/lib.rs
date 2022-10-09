@@ -72,11 +72,15 @@ fn get_next_word(iter: &mut Chars, next: Option<char>) -> String {
 	string
 }
 
-pub fn throw_eof() -> char {
+pub fn throw_eof<T>() -> T {
 	throw("Unexpected end of file: Missing closing bracket")
 }
 
-pub fn throw(error: &str) -> char {
+pub fn throw_void(error: &str) {
+	throw(error)
+}
+
+pub fn throw<T>(error: &str) -> T {
 	let program_name = env!("CARGO_PKG_NAME");
 	println!("{program_name}: {error}");
 	#[cfg(not(debug_assertions))]
