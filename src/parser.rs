@@ -3,9 +3,8 @@ use std::{iter::Peekable, str::Chars};
 use crate::throw;
 use crate::types::*;
 
-pub fn parse(string: String) {
-	let expr = evaluate_expression(&mut string.chars().peekable());
-	println!("{:?}", expr)
+pub fn parse(string: String) -> Expression {
+	evaluate_expression(&mut string.chars().peekable())
 }
 
 fn evaluate_expression(iter: &mut Peekable<Chars>) -> Expression {

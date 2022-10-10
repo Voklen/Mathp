@@ -4,7 +4,8 @@ fn main() {
 	let files = get_arguments();
 	for file_name in files {
 		let file = std::fs::read_to_string(file_name).unwrap();
-		parser::parse(file);
+		let parsed = parser::parse(file);
+		println!("{:?}", parsed)
 	}
 }
 
