@@ -5,7 +5,8 @@ fn main() {
 	for file_name in files {
 		let file = std::fs::read_to_string(file_name).unwrap();
 		let parsed = parser::parse(file);
-		println!("{:?}", parsed)
+		let eval = evaluator::evaluate(parsed);
+		println!("Result: {eval}")
 	}
 }
 
