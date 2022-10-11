@@ -2,9 +2,8 @@ use mathp::*;
 
 fn main() {
 	let files = get_arguments();
-	for file_name in files {
-		let file = std::fs::read_to_string(file_name).unwrap();
-		let parsed = parser::parse(file);
+	for filename in files {
+		let parsed = parser::parse_file(&filename);
 		let eval = evaluator::evaluate(parsed);
 		println!("Result: {eval}")
 	}

@@ -3,8 +3,13 @@ use std::{iter::Peekable, str::Chars};
 use crate::throw;
 use crate::types::*;
 
+pub fn parse_file(filename: &str) -> Expression {
+	let file = std::fs::read_to_string(filename).unwrap();
+	parse(file)
+}
 pub fn parse(string: String) -> Expression {
-	evaluate_expression(&mut string.chars().peekable())
+	let mut chars = string.chars().peekable();
+	evaluate_expression(&mut chars)
 }
 
 fn evaluate_expression(iter: &mut Peekable<Chars>) -> Expression {
