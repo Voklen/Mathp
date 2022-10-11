@@ -7,6 +7,25 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Debug unit tests in library 'mathp'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=mathp"
+                ],
+                "filter": {
+                    "name": "mathp",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Debug executable 'mathp'",
             "cargo": {
                 "args": [
@@ -38,6 +57,25 @@
                 "filter": {
                     "name": "mathp",
                     "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'add'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=add",
+                    "--package=mathp"
+                ],
+                "filter": {
+                    "name": "add",
+                    "kind": "test"
                 }
             },
             "args": [],

@@ -32,7 +32,7 @@ fn evaluate_expression(iter: &mut Peekable<Chars>) -> Expression {
 
 fn parse_function(iter: &mut Peekable<Chars>, mut arguments: Vec<Expression>) -> Vec<Expression> {
 	let character = iter.peek().unwrap_or_else(throw_eof);
-	if character == &')' {
+	if character == &')' || character.is_whitespace() {
 		iter.next();
 		return arguments;
 	}

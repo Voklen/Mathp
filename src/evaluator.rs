@@ -22,6 +22,8 @@ fn evaluate_function(func: Function) -> i64 {
 	let mut functions = HashMap::<&str, &dyn Fn(Vec<i64>) -> i64>::new();
 	functions.insert("+", &add);
 	functions.insert("-", &sub);
+	functions.insert("*", &mul);
+	functions.insert("/", &div);
 	let new_func = match functions.get(&func.name as &str) {
 		Some(i) => i,
 		None => throw("No function {func.name}"),
@@ -31,8 +33,20 @@ fn evaluate_function(func: Function) -> i64 {
 }
 
 fn add(x: Vec<i64>) -> i64 {
-	x.iter().fold(0, |total, new| total + new)
+	x.into_iter().fold(0, |total, new| total + new)
 }
 fn sub(x: Vec<i64>) -> i64 {
-	x.iter().fold(0, |total, new| total - new)
+	let (first, rest) = x
+		.split_first()
+		.unwrap_or_else(|| throw("Not enough arguments"));
+	rest.into_iter().fold(*first, |total, new| total - new)
+}
+fn mul(x: Vec<i64>) -> i64 {
+	x.into_iter().fold(1, |total, new| total * new)
+}
+fn div(x: Vec<i64>) -> i64 {
+	let (first, rest) = x
+		.split_first()
+		.unwrap_or_else(|| throw("Not enough arguments"));
+	rest.into_iter().fold(*first, |total, new| total / new)
 }
