@@ -23,7 +23,7 @@ fn negatives() {
 
 #[test]
 fn file() {
-	let parsed = parser::parse_file("test_data/add.mathp");
+	let parsed = parser::parse_file("test_data/numeric.mathp");
 	let eval = evaluator::evaluate(parsed);
 	assert_eq!(eval, 17)
 }
