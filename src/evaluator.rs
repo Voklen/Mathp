@@ -2,28 +2,30 @@ use std::collections::HashMap;
 
 use crate::{throw, types::*};
 
-pub fn evaluate(expr: Expression) -> i64 {
+pub fn evaluate(expr: Expression) -> Expression {
 	match expr {
 		Expression::Func(func) => evaluate_function(func),
-		Expression::Num(num) => num,
+		Expression::Num(num) => Expression::Num(num),
+		Expression::Matrix(matrix) => Expression::Matrix(matrix),
 	}
 }
 
-fn evaluate_function(func: Function) -> i64 {
-	fn convert_args(args: Vec<Expression>) -> Vec<i64> {
+fn evaluate_function(func: Function) -> Expression {
+	fn convert_args(args: Vec<Expression>) -> Vec<Expression> {
 		args.into_iter().map(convert_arg).collect()
 	}
-	fn convert_arg(expr: Expression) -> i64 {
+	fn convert_arg(expr: Expression) -> Expression {
 		match expr {
 			Expression::Func(function) => evaluate_function(function),
-			Expression::Num(num) => num,
+			Expression::Num(num) => Expression::Num(num),
+			Expression::Matrix(matrix) => Expression::Matrix(matrix),
 		}
 	}
 	let mut functions = HashMap::<&str, MathsFunction>::new();
-	functions.insert("+", add);
-	functions.insert("-", sub);
-	functions.insert("*", mul);
-	functions.insert("/", div);
+	// functions.insert("+", add);
+	// functions.insert("-", sub);
+	// functions.insert("*", mul);
+	// functions.insert("/", div);
 	let new_func = match functions.get(&func.name as &str) {
 		Some(i) => i,
 		None => throw("No function {func.name}"),
@@ -32,23 +34,25 @@ fn evaluate_function(func: Function) -> i64 {
 	new_func(new_args)
 }
 
-type MathsFunction = fn(Vec<i64>) -> i64;
+type MathsFunction = fn(Vec<Expression>) -> Expression;
 
-fn add(x: Vec<i64>) -> i64 {
-	x.into_iter().fold(0, |total, new| total + new)
-}
-fn sub(x: Vec<i64>) -> i64 {
-	let (first, rest) = x
-		.split_first()
-		.unwrap_or_else(|| throw("Not enough arguments"));
-	rest.into_iter().fold(*first, |total, new| total - new)
-}
-fn mul(x: Vec<i64>) -> i64 {
-	x.into_iter().fold(1, |total, new| total * new)
-}
-fn div(x: Vec<i64>) -> i64 {
-	let (first, rest) = x
-		.split_first()
-		.unwrap_or_else(|| throw("Not enough arguments"));
-	rest.into_iter().fold(*first, |total, new| total / new)
-}
+// fn add(x: Vec<Expression>) -> Expression {
+// 	x.into_iter()
+// 		.fold(Expression::Num(0), |total, new| total + new)
+// }
+// fn sub(x: Vec<Expression>) -> Expression {
+// 	let (first, rest) = x
+// 		.split_first()
+// 		.unwrap_or_else(|| throw("Not enough arguments"));
+// 	rest.into_iter().fold(*first, |total, new| total - new)
+// }
+// fn mul(x: Vec<Expression>) -> Expression {
+// 	x.into_iter()
+// 		.fold(Expression::Num(1), |total, new| total * new)
+// }
+// fn div(x: Vec<Expression>) -> Expression {
+// 	let (first, rest) = x
+// 		.split_first()
+// 		.unwrap_or_else(|| throw("Not enough arguments"));
+// 	rest.into_iter().fold(*first, |total, new| total / new)
+// }
