@@ -50,6 +50,66 @@ fn add_matrix(matrix: Matrix, expr: Expression) -> Expression {
 	}
 }
 
+impl std::ops::Sub for Expression {
+	type Output = Self;
+
+	fn sub(self, rhs: Self) -> Self::Output {
+		match self {
+			Self::Num(num) => sub_num(num, rhs),
+			Self::Func(_) => todo!(),
+			Self::Matrix(matrix) => todo!(),
+		}
+	}
+}
+
+fn sub_num(num: i64, expr: Expression) -> Expression {
+	match expr {
+		Expression::Num(other_num) => Expression::Num(num - other_num),
+		Expression::Func(_) => todo!(),
+		Expression::Matrix(_) => throw("Cannot subtract a matrix from a constant"),
+	}
+}
+
+impl std::ops::Mul for Expression {
+	type Output = Self;
+
+	fn mul(self, rhs: Self) -> Self::Output {
+		match self {
+			Self::Num(num) => mul_num(num, rhs),
+			Self::Func(_) => todo!(),
+			Self::Matrix(matrix) => todo!(),
+		}
+	}
+}
+
+fn mul_num(num: i64, expr: Expression) -> Expression {
+	match expr {
+		Expression::Num(other_num) => Expression::Num(num * other_num),
+		Expression::Func(_) => todo!(),
+		Expression::Matrix(_) => throw("Cannot subtract a matrix from a constant"),
+	}
+}
+
+impl std::ops::Div for Expression {
+	type Output = Self;
+
+	fn div(self, rhs: Self) -> Self::Output {
+		match self {
+			Self::Num(num) => div_num(num, rhs),
+			Self::Func(_) => todo!(),
+			Self::Matrix(matrix) => todo!(),
+		}
+	}
+}
+
+fn div_num(num: i64, expr: Expression) -> Expression {
+	match expr {
+		Expression::Num(other_num) => Expression::Num(num / other_num),
+		Expression::Func(_) => todo!(),
+		Expression::Matrix(_) => throw("Cannot subtract a matrix from a constant"),
+	}
+}
+
 // Number types
 
 #[derive(Debug, Eq, PartialEq)]

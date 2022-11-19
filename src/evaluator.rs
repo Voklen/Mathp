@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, vec::IntoIter};
 
 use crate::{throw, types::*};
 
@@ -22,10 +22,10 @@ fn evaluate_function(func: Function) -> Expression {
 		}
 	}
 	let mut functions = HashMap::<&str, MathsFunction>::new();
-	// functions.insert("+", add);
-	// functions.insert("-", sub);
-	// functions.insert("*", mul);
-	// functions.insert("/", div);
+	functions.insert("+", add);
+	functions.insert("-", sub);
+	functions.insert("*", mul);
+	functions.insert("/", div);
 	let new_func = match functions.get(&func.name as &str) {
 		Some(i) => i,
 		None => throw("No function {func.name}"),
@@ -36,23 +36,25 @@ fn evaluate_function(func: Function) -> Expression {
 
 type MathsFunction = fn(Vec<Expression>) -> Expression;
 
-// fn add(x: Vec<Expression>) -> Expression {
-// 	x.into_iter()
-// 		.fold(Expression::Num(0), |total, new| total + new)
-// }
-// fn sub(x: Vec<Expression>) -> Expression {
-// 	let (first, rest) = x
-// 		.split_first()
-// 		.unwrap_or_else(|| throw("Not enough arguments"));
-// 	rest.into_iter().fold(*first, |total, new| total - new)
-// }
-// fn mul(x: Vec<Expression>) -> Expression {
-// 	x.into_iter()
-// 		.fold(Expression::Num(1), |total, new| total * new)
-// }
-// fn div(x: Vec<Expression>) -> Expression {
-// 	let (first, rest) = x
-// 		.split_first()
-// 		.unwrap_or_else(|| throw("Not enough arguments"));
-// 	rest.into_iter().fold(*first, |total, new| total / new)
-// }
+fn add(x: Vec<Expression>) -> Expression {
+	x.into_iter()
+		.fold(Expression::Num(0), |total, new| total + new)
+}
+fn sub(x: Vec<Expression>) -> Expression {
+	let iter = x.into_iter();
+	let (first, rest) = split_first(iter).unwrap_or_else(|| throw("Not enough arguments"));
+	rest.fold(first, |total, new| total - new)
+}
+fn mul(x: Vec<Expression>) -> Expression {
+	x.into_iter()
+		.fold(Expression::Num(1), |total, new| total * new)
+}
+fn div(x: Vec<Expression>) -> Expression {
+	let iter = x.into_iter();
+	let (first, rest) = split_first(iter).unwrap_or_else(|| throw("Not enough arguments"));
+	rest.fold(first, |total, new| total / new)
+}
+
+fn split_first<T>(mut iter: IntoIter<T>) -> Option<(T, IntoIter<T>)> {
+	Some((iter.next()?, iter))
+}
