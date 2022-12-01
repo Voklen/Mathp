@@ -1,4 +1,7 @@
-use std::{fmt::Display, ops::Add};
+use std::{
+	fmt::Display,
+	ops::{Add, Sub},
+};
 
 use crate::throw;
 
@@ -57,7 +60,7 @@ impl std::ops::Sub for Expression {
 		match self {
 			Self::Num(num) => sub_num(num, rhs),
 			Self::Func(_) => todo!(),
-			Self::Matrix(matrix) => todo!(),
+			Self::Matrix(matrix) => sub_matrix(matrix, rhs),
 		}
 	}
 }
@@ -67,6 +70,14 @@ fn sub_num(num: i64, expr: Expression) -> Expression {
 		Expression::Num(other_num) => Expression::Num(num - other_num),
 		Expression::Func(_) => todo!(),
 		Expression::Matrix(_) => throw("Cannot subtract a matrix from a constant"),
+	}
+}
+
+fn sub_matrix(matrix: Matrix, expr: Expression) -> Expression {
+	match expr {
+		Expression::Num(_) => throw("Cannot subtract a constant from a matrix"),
+		Expression::Func(_) => todo!(),
+		Expression::Matrix(other_matrix) => Expression::Matrix(matrix - other_matrix),
 	}
 }
 
@@ -131,7 +142,24 @@ impl Add for Matrix {
 	}
 }
 
+impl Sub for Matrix {
+	type Output = Self;
+
+	fn sub(self, rhs: Self) -> Self::Output {
+		let matrix0 = self.data.into_iter();
+		let matrix1 = rhs.data.into_iter();
+		let zipped = matrix0.zip(matrix1);
+		let data = zipped.map(sub_vectors).collect();
+		Self { data }
+	}
+}
+
 fn add_vectors((vec0, vec1): (Vec<i64>, Vec<i64>)) -> Vec<i64> {
 	let zipped = vec0.into_iter().zip(vec1.into_iter());
 	zipped.map(|(x, y)| x + y).collect()
+}
+
+fn sub_vectors((vec0, vec1): (Vec<i64>, Vec<i64>)) -> Vec<i64> {
+	let zipped = vec0.into_iter().zip(vec1.into_iter());
+	zipped.map(|(x, y)| x - y).collect()
 }
