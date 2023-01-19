@@ -27,3 +27,10 @@ fn file() {
 	let eval = evaluator::evaluate(parsed);
 	assert_eq!(eval, Expression::Num(17))
 }
+
+#[test]
+#[should_panic]
+fn number_as_function() {
+	let parsed = parser::parse("(+ (3 21 5) 4)".to_string());
+	evaluator::evaluate(parsed);
+}
