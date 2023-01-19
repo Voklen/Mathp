@@ -9,7 +9,18 @@ pub fn parse_file(filename: &str) -> Expression {
 }
 pub fn parse(string: String) -> Expression {
 	let mut chars = string.chars().peekable();
-	evaluate_expression(&mut chars)
+	let expression = evaluate_expression(&mut chars);
+	check_for_trailing_characters(chars);
+	expression
+}
+
+fn check_for_trailing_characters(mut chars: Peekable<Chars>) {
+	while chars.peek() == Some(&' ') {
+		chars.next();
+	}
+	if chars.peek().is_some() {
+		throw("Characters after end of expression")
+	}
 }
 
 fn evaluate_expression(iter: &mut Peekable<Chars>) -> Expression {
